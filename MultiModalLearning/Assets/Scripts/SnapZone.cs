@@ -17,7 +17,7 @@ public class SnapZone : MonoBehaviour
     MeshRenderer rend;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         rend = GetComponent<MeshRenderer>();
         rend.enabled = false;
@@ -39,14 +39,17 @@ public class SnapZone : MonoBehaviour
 
     public bool CheckIfInInventory(SnapObjectType potentialSnapObject)
     {
+        //check if the thing we're trying to snap into the snapzone is a valid thing to snap in.
         bool snapAvailable = false;
         foreach (SnapObjectType objectType in snapZoneInventory)
         {
             if (potentialSnapObject == objectType)
             {
+                //we found the snap object type in the inventory of the snap zone, meaning we can now snap that object in.
+                Debug.Log("That's valid, lets snap!");
                 snapAvailable = true;
                 SnapIn(potentialSnapObject);
-                SnapZoneManager.Instance.FireSnapReplacement(potentialSnapObject);
+                //SnapZoneManager.Instance.FireSnapReplacement(potentialSnapObject);
             }
         }
         return snapAvailable;

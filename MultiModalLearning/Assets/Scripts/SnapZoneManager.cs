@@ -13,7 +13,7 @@ public class SnapZoneManager : MonoBehaviour
 
     private void Awake()
     {
-        if(Instance == null)
+        if (Instance == null)
         {
             Instance = this;
         }
@@ -32,16 +32,5 @@ public class SnapZoneManager : MonoBehaviour
     {
         Hovering?.Invoke(hovering);
         //Debug.Log("Where we dropping? Tomato town?");
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

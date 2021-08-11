@@ -14,6 +14,8 @@ public class InventoryObject : MonoBehaviour, IDragHandler, IEndDragHandler, IPo
     Image image;
     public TextMeshProUGUI hoverText;
     bool isDragging;
+    public LayerMask snapzoneLayerMask = 1 << 6;
+    public LayerMask interactableLayerMask = 1 << 7;
 
     void Start()
     {
@@ -31,7 +33,8 @@ public class InventoryObject : MonoBehaviour, IDragHandler, IEndDragHandler, IPo
         RaycastHit hit;
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
-        if (Physics.Raycast(ray, out hit))
+        //first, check if we hit any snapzones by doing a raycast that only checks the snapzone layer.
+        if (Physics.Raycast(ray, out hit, 20f, snapzoneLayerMask))
         {
             Transform objectHit = hit.transform;
             Debug.Log("Watch it, you nearly dropped me onto: " + objectHit.name);
@@ -47,10 +50,26 @@ public class InventoryObject : MonoBehaviour, IDragHandler, IEndDragHandler, IPo
             }
             else
             {
+                
                 Debug.Log("Uh, that wasn't valid. There should probably be an error message here for the user.");
             }
+        }
+
+        //next, we check if we hit anything interactable by doing a raycast that only checks the interactable layer
+        if (Physics.Raycast(ray, out hit, 20f, interactableLayerMask))
+        {
+            Debug.Log("Woah, we should check if we can interact with this object!");
+            Transform objectHit = hit.transform;
+            if (objectHit.CompareTag("InteractableZone"))
+            {
+                Debug.Log("Gonna try to interact with: " + objectHit.name);
+                objectHit.GetComponent<InteractableZone>().CheckIfInInventory(thisObjectType);
+            }
+
 
         }
+
+
         isDragging = false;
         ReturnToOriginalPosition();
     }
