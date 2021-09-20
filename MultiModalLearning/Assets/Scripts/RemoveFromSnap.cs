@@ -76,10 +76,10 @@ public class RemoveFromSnap : MonoBehaviour, IDragHandler, IEndDragHandler, IPoi
             }
 
             Vector3 mousePos = Input.mousePosition;
-            mousePos.z = (offset - mousePos).z;
+            mousePos.z = (mousePos - offset).z;
 
             Vector3 desiredPos = Camera.main.ScreenToWorldPoint(mousePos);
-            //Debug.Log("Desired Postion is: " + desiredPos);
+            Debug.Log("Desired Postion is: " + desiredPos);
             snapZone.inventoryObjectModelDictionary[snapZone.currentlySnapped].transform.position = desiredPos;
             SnapZoneManager.Instance.FireHoveringEvent(true);
             //Debug.Log("I'm being dragged!");

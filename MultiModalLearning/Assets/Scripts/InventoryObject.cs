@@ -32,9 +32,12 @@ public class InventoryObject : MonoBehaviour, IDragHandler, IEndDragHandler, IPo
         SnapZoneManager.Instance.FireHoveringEvent(false);
         RaycastHit hit;
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        //Debug.DrawRay(ray.origin, ray.direction * 100, Color.green, 2f);
+        //GameObject originCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        //originCube.transform.position = ray.origin;
 
         //first, check if we hit any snapzones by doing a raycast that only checks the snapzone layer.
-        if (Physics.Raycast(ray, out hit, 20f, snapzoneLayerMask))
+        if (Physics.Raycast(ray, out hit, 1000f, snapzoneLayerMask))
         {
             Transform objectHit = hit.transform;
             Debug.Log("Watch it, you nearly dropped me onto: " + objectHit.name);
@@ -54,9 +57,13 @@ public class InventoryObject : MonoBehaviour, IDragHandler, IEndDragHandler, IPo
                 Debug.Log("Uh, that wasn't valid. There should probably be an error message here for the user.");
             }
         }
+        else
+        {
+            Debug.Log("Hit nothing.");
+        }
 
         //next, we check if we hit anything interactable by doing a raycast that only checks the interactable layer
-        if (Physics.Raycast(ray, out hit, 20f, interactableLayerMask))
+        if (Physics.Raycast(ray, out hit, 1000f, interactableLayerMask))
         {
             Debug.Log("Woah, we should check if we can interact with this object!");
             Transform objectHit = hit.transform;

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class OffOnScreenView : MonoBehaviour
 {
 
-    RawImage image;
+    public RawImage image;
 
     // Start is called before the first frame update
     void Start()

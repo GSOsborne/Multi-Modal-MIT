@@ -27,12 +27,17 @@ public class SnapZone : MonoBehaviour
         {
             //associating the arrays in the editor. make sure they're referenced in the same order.
             inventoryObjectModelDictionary.Add(snapObject, inventoryObjectModel[i]);
-            Debug.Log(snapObject + " is connected to " + inventoryObjectModelDictionary[snapObject]);
+            //Debug.Log(snapObject + " is connected to " + inventoryObjectModelDictionary[snapObject]);
 
             //and turn them all off at the beginning.
             inventoryObjectModelDictionary[snapObject].SetActive(false);
             i++;
         }
+
+    }
+
+    private void Start()
+    {
         currentlySnapped = SnapObjectType.Empty;
         SnapIn(SnapObjectType.Empty);
     }

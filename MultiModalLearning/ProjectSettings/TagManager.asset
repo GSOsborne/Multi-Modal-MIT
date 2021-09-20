@@ -6,6 +6,7 @@ TagManager:
   tags:
   - SnapZone
   - InteractableZone
+  - Drillable
   layers:
   - Default
   - TransparentFX
