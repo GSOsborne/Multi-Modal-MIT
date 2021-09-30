@@ -40,7 +40,7 @@ public class InventoryObject : MonoBehaviour, IDragHandler, IEndDragHandler, IPo
         if (Physics.Raycast(ray, out hit, 1000f, snapzoneLayerMask))
         {
             Transform objectHit = hit.transform;
-            Debug.Log("Watch it, you nearly dropped me onto: " + objectHit.name);
+            Debug.Log("Watch it, you nearly dropped me, " + thisObjectType + " onto: " + objectHit.name);
             if (objectHit.CompareTag("SnapZone"))
             {
                 bool isSnappable = objectHit.gameObject.GetComponent<SnapZone>().CheckIfInInventory(thisObjectType);

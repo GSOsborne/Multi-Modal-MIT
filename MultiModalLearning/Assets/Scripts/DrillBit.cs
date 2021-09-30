@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static Spinning;
+using static ClampMovement;
 using static FailureState;
 
 public class DrillBit : MonoBehaviour
@@ -18,24 +19,31 @@ public class DrillBit : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-
         if (other.gameObject.CompareTag("Drillable"))
         {
-            if (Spinning.Instance.isSpinning)
+            if (ClampMovement.Instance.isClamped)
             {
-                drill = other.gameObject.GetComponent<Drillable>();
-                drill.NewHole(drillThickness, entryPoint.position);
+                if (Spinning.Instance.isSpinning)
+                {
+                    drill = other.gameObject.GetComponent<Drillable>();
+                    drill.NewHole(drillThickness, entryPoint.position);
+                }
+                else
+                {
+                    Debug.Log("YOUR DRILL IS NOW BROKEN.");
+                    FailureState.Instance.SystemFailure("Your drill wasn't spinning when it touched the drillable piece.");
+                }
             }
             else
             {
-                Debug.Log("YOUR DRILL IS NOW BROKEN.");
-                FailureState.Instance.SystemFailure("Your drill wasn't spinning when it touched the drillable piece.");
+                FailureState.Instance.SystemFailure("Your block wasn't clamped when you tried to drill it.");
             }
+
         }
         else if(other.gameObject.CompareTag("Untagged"))
         {
             Debug.Log("You should not be drilling that! Stop it now!");
-            FailureState.Instance.SystemFailure("Your drill touched something it shouldn't.");
+            FailureState.Instance.SystemFailure("Your drill touched something it shouldn't. Did you forget parallels?");
         }
     }
 

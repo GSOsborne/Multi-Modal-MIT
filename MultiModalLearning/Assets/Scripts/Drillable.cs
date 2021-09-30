@@ -23,6 +23,13 @@ public class Drillable : MonoBehaviour
 
     int holeCount;
 
+    public float lowestHoleDepth;
+
+    public float currentDrillHeat;
+    public float maximumDrillHeatValue;
+
+    public float xDimensions, yDimensions;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -39,16 +46,32 @@ public class Drillable : MonoBehaviour
         zeroedReferencePos = new Vector3(zeroedReferencePos.x, 0, zeroedReferencePos.z);
         Debug.Log("zeroed out contact location is: " + zeroedReferencePos);
 
+        bool tooCloseToTheEdge = (zeroedReferencePos.x + sentThickness / 2f) > xDimensions || 
+            (zeroedReferencePos.x - sentThickness / 2f) < 0f || 
+            (zeroedReferencePos.z + sentThickness / 2f) > yDimensions || 
+            (zeroedReferencePos.z - sentThickness / 2f) < 0;
+        if (tooCloseToTheEdge)
+        {
+            FailureState.Instance.SystemFailure("You drilled too close to the edge.");
+        }
+
         //check if we've drilled this position before.
         bool newHole = true;
         foreach (HoleInfo holeInfo in drilledHoles)
         {
-            bool sameHole = (zeroedReferencePos - holeInfo.holeStartPos).magnitude < .03f;
+            float distanceFromHole = (zeroedReferencePos - holeInfo.holeStartPos).magnitude;
+            bool sameHole = distanceFromHole < holeInfo.holeThickness/5;
+            bool tooCloseToOtherHole = distanceFromHole > holeInfo.holeThickness / 5 && distanceFromHole < (holeInfo.holeThickness / 2 + sentThickness / 2);
             if (sameHole)
             {
                 Debug.Log("Drilling into the same hole!");
                 holeCount = holeInfo.holeNumber;
                 newHole = false;
+            }
+            else if (tooCloseToOtherHole)
+            {
+                Debug.Log("You're too close to an existing hole and that's dangerous.");
+                FailureState.Instance.SystemFailure("You tried to drill too close to an already existing hole.");
             }
         }
 
@@ -78,7 +101,7 @@ public class Drillable : MonoBehaviour
 
         Vector3 sentHolePosition = new Vector3(zeroedDepth.x, 0f, zeroedDepth.z);
         //Debug.Log("Sent Hole Position zeroed out is " + sentHolePosition + " while hole #" + holeCount + " has starting position of " + drilledHoles[holeCount].holeStartPos);
-        bool movedLaterally = (sentHolePosition - drilledHoles[holeCount].holeStartPos).magnitude > .03f;
+        bool movedLaterally = (sentHolePosition - drilledHoles[holeCount].holeStartPos).magnitude > drilledHoles[holeCount].holeThickness/5;
         if(movedLaterally)
         {
             Debug.Log("moved laterally with magnitude of " + (sentHolePosition - drilledHoles[holeCount].holeStartPos).magnitude);
@@ -86,8 +109,11 @@ public class Drillable : MonoBehaviour
         }
         else if (drilledHoles[holeCount].holeDepth > zeroedDepth.y)
         {
-            drilledHoles[holeCount].holeDepth = zeroedDepth.y;
+            drilledHoles[holeCount].holeDepth = Mathf.Max(zeroedDepth.y, lowestHoleDepth);
             Debug.Log("Hole #" + holeCount + " depth is now " + drilledHoles[holeCount].holeDepth);
+
+            //This should also add heat to the drill
+            currentDrillHeat += Time.deltaTime * 5;
         }
     }
 
@@ -106,6 +132,10 @@ public class Drillable : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(currentDrillHeat > maximumDrillHeatValue)
+        {
+            FailureState.Instance.SystemFailure("Your drill overheated. Try pecking next time.");
+        }
+        currentDrillHeat = Mathf.Max(currentDrillHeat - Time.deltaTime, 0);
     }
 }

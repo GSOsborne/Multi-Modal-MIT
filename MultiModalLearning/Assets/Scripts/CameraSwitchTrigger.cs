@@ -30,4 +30,9 @@ public class CameraSwitchTrigger : MonoBehaviour
     {
         anim.Play("ScreenCloseUp");
     }
+
+    public void ChangeToBlockCloseUp()
+    {
+        anim.Play("BlockCloseUp");
+    }
 }

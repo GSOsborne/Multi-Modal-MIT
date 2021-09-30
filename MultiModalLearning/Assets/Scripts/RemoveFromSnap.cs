@@ -15,8 +15,11 @@ public class RemoveFromSnap : MonoBehaviour, IDragHandler, IEndDragHandler, IPoi
     bool offsetCalculated;
     Vector3 originalPosition;
     SnapObjectType currentlySnapped;
+    public bool isRemoving;
 
     SnapRestrictions restrictions;
+
+    bool started = false;
 
     // Start is called before the first frame update
     void Start()
@@ -24,7 +27,10 @@ public class RemoveFromSnap : MonoBehaviour, IDragHandler, IEndDragHandler, IPoi
         snapZone.currentlySnapped = SnapObjectType.Empty;
         hoverText.enabled = false;
         cantRemoveText.enabled = false;
+        Debug.Log("Starting remove from snap.");
         SnapZoneManager.Instance.SnappedObjectReplaced += ReevaluateCurrentSnapObject;
+        started = true;
+        isRemoving = false;
     }
 
     void OnDisable()
@@ -34,7 +40,12 @@ public class RemoveFromSnap : MonoBehaviour, IDragHandler, IEndDragHandler, IPoi
 
     void OnEnable()
     {
-        SnapZoneManager.Instance.SnappedObjectReplaced += ReevaluateCurrentSnapObject;
+        if (started)
+        {
+            Debug.Log("It's me, the " + gameObject.name);
+            SnapZoneManager.Instance.SnappedObjectReplaced += ReevaluateCurrentSnapObject;
+        }
+
     }
 
     IEnumerator ReevaluateCoroutine()
@@ -68,6 +79,7 @@ public class RemoveFromSnap : MonoBehaviour, IDragHandler, IEndDragHandler, IPoi
     {
         if (restrictions.removable)
         {
+            isRemoving = true;
             if (!offsetCalculated)
             {
                 offset = Camera.main.transform.position - snapZone.inventoryObjectModelDictionary[snapZone.currentlySnapped].transform.position;
@@ -86,6 +98,7 @@ public class RemoveFromSnap : MonoBehaviour, IDragHandler, IEndDragHandler, IPoi
         }
         else
         {
+            isRemoving = false;
             Debug.Log("Uh, you can't remove that yet. For reasons.");
         }
 
@@ -93,6 +106,7 @@ public class RemoveFromSnap : MonoBehaviour, IDragHandler, IEndDragHandler, IPoi
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        isRemoving = false;
         Debug.Log("Hey wait you let go ahhhhhhhhhhhh");
         ReturnToOriginalPosition();
         offsetCalculated = false;

@@ -5,7 +5,7 @@ using UnityEngine;
 public class SnapZoneManager : MonoBehaviour
 {
 
-    public enum SnapObjectType { Empty, Drill1, Drill2, Drill3, Chuck, ChuckKey }
+    public enum SnapObjectType { Empty, Drill1, Drill2, Drill3, Chuck, ChuckKey, EdgeFinder, SixByFourSteelBlock, Parallels, Mallet}
     public static SnapZoneManager Instance;
 
     public event System.Action<bool> Hovering;

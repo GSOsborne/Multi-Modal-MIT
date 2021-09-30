@@ -21,6 +21,12 @@ public class SnapZone : MonoBehaviour
     {
         rend = GetComponent<MeshRenderer>();
         rend.enabled = false;
+
+
+    }
+
+    private void Start()
+    {
         SnapZoneManager.Instance.Hovering += OnHover;
         int i = 0;
         foreach (SnapObjectType snapObject in snapZoneInventory)
@@ -33,11 +39,6 @@ public class SnapZone : MonoBehaviour
             inventoryObjectModelDictionary[snapObject].SetActive(false);
             i++;
         }
-
-    }
-
-    private void Start()
-    {
         currentlySnapped = SnapObjectType.Empty;
         SnapIn(SnapObjectType.Empty);
     }
