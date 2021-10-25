@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static Spinning;
 
 public class CoordinateDisplay : MonoBehaviour
 {
@@ -26,6 +27,8 @@ public class CoordinateDisplay : MonoBehaviour
 
     bool enterValueRoutineStarted;
 
+    public int maxStringLength;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -45,9 +48,24 @@ public class CoordinateDisplay : MonoBehaviour
         float zCoord = zRotator.storedRotation - zeroPosition.z;
         if (valueUnselected)
         {
-            xText.text = "X: " + xCoord;
-            yText.text = "Y: " + yCoord;
-            zText.text = "Z: " + zCoord;
+            string xTextTruncated = "X: " + xCoord;
+            if(xTextTruncated.Length > maxStringLength)
+            {
+                xTextTruncated = xTextTruncated.Substring(0, maxStringLength);
+            }
+            string yTextTruncated = "Y: " + yCoord;
+            if (yTextTruncated.Length > maxStringLength)
+            {
+                yTextTruncated = yTextTruncated.Substring(0, maxStringLength);
+            }
+            string zTextTruncated = "Z: " + zCoord;
+            if (zTextTruncated.Length > maxStringLength)
+            {
+                zTextTruncated = zTextTruncated.Substring(0, maxStringLength);
+            }
+            xText.text = xTextTruncated;
+            yText.text = yTextTruncated;
+            zText.text = zTextTruncated;
         }
 
         currentCoordinates = new Vector3(xCoord, yCoord, zCoord);
@@ -312,10 +330,12 @@ public class CoordinateDisplay : MonoBehaviour
         if (valueEntered)
         {
             spinSpeedText.text = enteredValue;
+            Spinning.Instance.spinSpeed = float.Parse(enteredValue);
         }
         else
         {
             spinSpeedText.text = previousValue;
+            Spinning.Instance.spinSpeed = float.Parse(enteredValue);
         }
         spinSpeedText.fontStyle = FontStyle.Normal;
         enteringSpinSpeed = false;

@@ -26,7 +26,19 @@ public class DrillBit : MonoBehaviour
                 if (Spinning.Instance.isSpinning)
                 {
                     drill = other.gameObject.GetComponent<Drillable>();
-                    drill.NewHole(drillThickness, entryPoint.position);
+                    if(Spinning.Instance.spinSpeed < drill.minSpinSpeed)
+                    {
+                        FailureState.Instance.SystemFailure("Your drill was spinning too slowly!");
+                    }
+                    else if(Spinning.Instance.spinSpeed > drill.maxSpinSpeed)
+                    {
+                        FailureState.Instance.SystemFailure("Your drill was spinning to quickly!");
+                    }
+                    else
+                    {
+                        drill.NewHole(drillThickness, entryPoint.position);
+                    }
+
                 }
                 else
                 {

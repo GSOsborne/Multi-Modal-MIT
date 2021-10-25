@@ -30,6 +30,8 @@ public class Drillable : MonoBehaviour
 
     public float xDimensions, yDimensions;
 
+    public float minSpinSpeed, maxSpinSpeed;
+
     // Start is called before the first frame update
     void Start()
     {
