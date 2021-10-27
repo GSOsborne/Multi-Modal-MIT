@@ -10,10 +10,12 @@ public class MouseRotate : MonoBehaviour, IDragHandler
     Vector3 previousRay;
     public float storedRotation;
     public float angleSensitivity;
-    float startY, startZ;
+    float startX, startY;
     public float angleBounds;
     public Transform buttonTransform;
-    public float modelRotationMultiplier;
+    public float modelRotationMultiplier = 1;
+
+    //public float storedRotationMultiplier;
 
     // Start is called before the first frame update
     void Start()
@@ -21,8 +23,8 @@ public class MouseRotate : MonoBehaviour, IDragHandler
         mainCamera = Camera.main;
         previousRay = new Vector3(0f, 0f, 0f);
         storedRotation = 0f;
-        startY = buttonTransform.rotation.eulerAngles.y;
-        startZ = buttonTransform.rotation.eulerAngles.z;
+        startY = buttonTransform.localRotation.eulerAngles.y;
+        startX = buttonTransform.localRotation.eulerAngles.x;
     }
 
     // Update is called once per frame
@@ -45,7 +47,7 @@ public class MouseRotate : MonoBehaviour, IDragHandler
         //we will use the cross product to determine if we're going clockwise or counterclockwise
         Vector3 cross = Vector3.Cross(previousRay, newRay);
         //Debug.Log("Cross product is: " + cross);
-        Debug.DrawRay(transform.position, cross, Color.blue);
+        //Debug.DrawRay(transform.position, cross, Color.blue);
         //Debug.Log("Angle between forwards and cross is: " + Vector3.Angle(transform.forward, cross));
         if(Vector3.Angle(transform.forward, cross) > 90)
         {
@@ -58,10 +60,22 @@ public class MouseRotate : MonoBehaviour, IDragHandler
             //Debug.Log("Rotating counterclockwise! Stored rotation is: " + storedRotation);
         }
         //make sure stored rotation value is clamped
-        storedRotation = Mathf.Clamp(storedRotation, -angleBounds, angleBounds);
+        //storedRotation = Mathf.Clamp(storedRotation, -angleBounds, angleBounds);
+        if(storedRotation > angleBounds)
+        {
+            //Debug.Log(storedRotation + " is greater than angle bounds of: " + angleBounds);
+            storedRotation = angleBounds;
+            //Debug.Log("rotation was greater than angle bounds. Now: " + storedRotation);
+        }
+        else if(storedRotation < -angleBounds)
+        {
+            //Debug.Log(storedRotation + " is less than angle bounds of: " + -angleBounds);
+            storedRotation = -angleBounds;
+            //Debug.Log("rotation was less than angle bounds. Now: " + storedRotation);
+        }
 
         //now we can rotate using the stored rotation
-        buttonTransform.rotation = Quaternion.Euler(storedRotation * modelRotationMultiplier, startY, startZ);
+        buttonTransform.localRotation = Quaternion.Euler(startX, startY, storedRotation * modelRotationMultiplier);
 
         //reset previous ray for the next frame of dragging
         previousRay = newRay;
@@ -76,9 +90,16 @@ public class MouseRotate : MonoBehaviour, IDragHandler
             //Debug.Log("Do we need an error message here?");
         }
         //make sure stored rotation value is clamped
-        storedRotation = Mathf.Clamp(storedRotation, -angleBounds, angleBounds);
+        if (storedRotation > angleBounds)
+        {
+            storedRotation = angleBounds;
+        }
+        else if (storedRotation < -angleBounds)
+        {
+            storedRotation = -angleBounds;
+        }
 
         //now we can rotate using the stored rotation
-        buttonTransform.rotation = Quaternion.Euler(storedRotation * modelRotationMultiplier, startY, startZ);
+        buttonTransform.localRotation = Quaternion.Euler(startX, startY, storedRotation * modelRotationMultiplier);
     }
 }

@@ -16,7 +16,6 @@ public class TableMover : MonoBehaviour
     Vector3 startXRot, startYRot;
     Vector3 zeroPosition;
 
-
     // Start is called before the first frame update
     void Start()
     {
@@ -35,7 +34,7 @@ public class TableMover : MonoBehaviour
 
     public void UpdatePosition()
     {
-        Vector3 newPos = new Vector3(xRotator.storedRotation * handleRotationMultiplier, zeroPosition.y, yRotator.storedRotation * handleRotationMultiplier);
+        Vector3 newPos = new Vector3(xRotator.storedRotation * handleRotationMultiplier, 0f, yRotator.storedRotation * handleRotationMultiplier);
         transform.position = zeroPosition + newPos;
 
         //Vector3 newXRot = startXRot + new Vector3(1f, 0f, 0f) * handleRotationMultiplier * xAxisSlider.value;

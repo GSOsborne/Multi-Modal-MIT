@@ -10,7 +10,11 @@ public class Spinning : MonoBehaviour
     public Transform spinningTrans;
     public bool isSpinning;
     public float spinSpeed;
+   
+    
     Vector3 startRot;
+
+    public GameObject dial;
 
     // Start is called before the first frame update
     void Awake()
@@ -28,6 +32,7 @@ public class Spinning : MonoBehaviour
     private void Start()
     {
         SpinningEventCall(false);
+        startRot = dial.transform.rotation.eulerAngles;
     }
 
     // Update is called once per frame
@@ -47,6 +52,15 @@ public class Spinning : MonoBehaviour
 
     public void CycleSpin()
     {
+        //Debug.Log("Cycling spin.");
         SpinningEventCall(!isSpinning);
+        if (isSpinning)
+        {
+            dial.transform.rotation = Quaternion.Euler(startRot + new Vector3(0f, 0f, 50f));
+        }
+        else
+        {
+            dial.transform.rotation = Quaternion.Euler(startRot);
+        }
     }
 }

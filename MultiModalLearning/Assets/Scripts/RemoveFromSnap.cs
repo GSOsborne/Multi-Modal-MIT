@@ -51,16 +51,16 @@ public class RemoveFromSnap : MonoBehaviour, IDragHandler, IEndDragHandler, IPoi
     IEnumerator ReevaluateCoroutine()
     {
         yield return null;
-        Debug.Log("Ooooo, a new snap object!");
+        //Debug.Log("Ooooo, a new snap object!");
         //we have a new snapped object, so all our logic for removal has to take into account the various restrictions and position of the new object
 
         if (snapZone.gameObject.activeSelf == true)
         {
             originalPosition = snapZone.inventoryObjectModelDictionary[snapZone.currentlySnapped].transform.position;
             currentlySnapped = snapZone.currentlySnapped;
-            Debug.Log("Now the currently snapped object is: " + currentlySnapped);
+            //Debug.Log("Now the currently snapped object is: " + currentlySnapped);
             restrictions = snapZone.inventoryObjectModelDictionary[snapZone.currentlySnapped].GetComponent<SnapRestrictions>();
-            Debug.Log("Referencing the restrictions component on " + snapZone.inventoryObjectModelDictionary[snapZone.currentlySnapped]);
+            //Debug.Log("Referencing the restrictions component on " + snapZone.inventoryObjectModelDictionary[snapZone.currentlySnapped]);
         }
     }
 
@@ -68,7 +68,7 @@ public class RemoveFromSnap : MonoBehaviour, IDragHandler, IEndDragHandler, IPoi
     {
         if (gameObject.activeSelf)
         {
-            Debug.Log("Dammit I'm on, im gonna do the coroutine, see: " + gameObject.name + " : " + gameObject.activeSelf);
+            //Debug.Log("Dammit I'm on, im gonna do the coroutine, see: " + gameObject.name + " : " + gameObject.activeSelf);
             StartCoroutine(ReevaluateCoroutine());
         }
 

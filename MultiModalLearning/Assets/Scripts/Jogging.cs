@@ -7,7 +7,7 @@ public class Jogging : MonoBehaviour
 {
     public bool isPositive;
     public float jogXSpeed, jogYSpeed, jogZSpeed;
-    public MouseRotate xRot, yRot, zRot;
+    public MouseRotate xRot, yRot, millHeadRot;
     public Text posNegText;
     public CoordinateDisplay coordDisp;
     // Start is called before the first frame update
@@ -61,11 +61,11 @@ public class Jogging : MonoBehaviour
     {
         if (isPositive)
         {
-            zRot.Jog(jogZSpeed * Time.deltaTime);
+            millHeadRot.Jog(jogZSpeed * Time.deltaTime);
         }
         else
         {
-            zRot.Jog(-jogZSpeed * Time.deltaTime);
+            millHeadRot.Jog(-jogZSpeed * Time.deltaTime);
         }
     }
 

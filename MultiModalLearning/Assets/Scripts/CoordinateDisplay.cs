@@ -7,7 +7,7 @@ using static Spinning;
 public class CoordinateDisplay : MonoBehaviour
 {
     //public Slider xSlider, ySlider, zSlider;
-    public MouseRotate xRotator, yRotator, zRotator;
+    public MouseRotate xRotator, yRotator, zRotator, millHeadRotator;
     MouseRotate currentlySelectedRotator;
     public Text xText, yText, zText;
     public Text spinSpeedText;
@@ -45,7 +45,7 @@ public class CoordinateDisplay : MonoBehaviour
     {
         float xCoord = xRotator.storedRotation - zeroPosition.x;
         float yCoord = yRotator.storedRotation - zeroPosition.y;
-        float zCoord = zRotator.storedRotation - zeroPosition.z;
+        float zCoord = zRotator.storedRotation + millHeadRotator.storedRotation - zeroPosition.z;
         if (valueUnselected)
         {
             string xTextTruncated = "X: " + xCoord;
@@ -73,7 +73,7 @@ public class CoordinateDisplay : MonoBehaviour
 
     public void ResetZero()
     {
-        zeroPosition = new Vector3(xRotator.storedRotation, yRotator.storedRotation, zRotator.storedRotation);
+        zeroPosition = new Vector3(xRotator.storedRotation, yRotator.storedRotation, zRotator.storedRotation+millHeadRotator.storedRotation);
     }
 
     public void CycleJogStatus()

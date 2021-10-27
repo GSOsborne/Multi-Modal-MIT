@@ -21,6 +21,9 @@ public class ClampMovement : MonoBehaviour
     public bool needsAWack;
     public bool needsATestJiggle;
     public bool fullySecure;
+    bool distanceAlreadyClamped;
+
+    int totalWacks;
 
     SnapRestrictions blockSnapRestrictions;
 
@@ -46,17 +49,32 @@ public class ClampMovement : MonoBehaviour
         zeroPosition = transform.localPosition;
         isClamped = false;
         originalMouseRotateAngleBounds = viseRotator.angleBounds;
+        distanceAlreadyClamped = false;
+        totalWacks = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
+        //Debug.Log("Clamp distance is: " + (farPoint.position - nearPoint.position).magnitude);
         if((farPoint.position - nearPoint.position).magnitude < yThickness)
         {
-            //Debug.Log("We are clamped now.");
+           // Debug.Log("We are clamped now.");
             isClamped = true;
             hammerWackInteractableZone.SetActive(true);
-            viseRotator.angleBounds = viseRotator.storedRotation;
+            if (!distanceAlreadyClamped)
+            {
+                if(viseRotator.storedRotation >= 0f)
+                {
+                    viseRotator.angleBounds = viseRotator.storedRotation;
+                }
+                else
+                {
+                    viseRotator.angleBounds = -viseRotator.storedRotation;
+                }
+                distanceAlreadyClamped = true;
+            }
+
 
             
 
@@ -76,11 +94,13 @@ public class ClampMovement : MonoBehaviour
         }
         else
         {
+            //Debug.Log("You can keep pushing if you want.");
             if(isClamped == true)
             {
                 StopAllCoroutines();
                 StartCoroutine(JustExitedClamp());
             }
+            distanceAlreadyClamped = false;
             isClamped = false;
             needsATestJiggle = false;
             fullySecure = false;
@@ -97,9 +117,9 @@ public class ClampMovement : MonoBehaviour
 
         Vector3 newPos = new Vector3(viseRotator.storedRotation * rotationMultiplier, 0f, 0f);
         //Debug.Log(newPos);
-        if((zeroPosition+newPos).x > transform.localPosition.x && isClamped)
+        if((zeroPosition+newPos).x < transform.localPosition.x && isClamped)
         {
-            //Debug.Log("Tried to move forwards while clamped. Didn't.");
+            //Debug.Log("Tried to move forwards while clamped. Didn't. " + (zeroPosition+newPos).x + " compared to " + transform.localPosition.x);
         }
         else
         {
@@ -110,6 +130,7 @@ public class ClampMovement : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
+        //Debug.Log("Well, somethings inside me.");
         if (other.gameObject.CompareTag("Drillable"))
         {
             blockSnapRestrictions = other.transform.parent.gameObject.GetComponent<SnapRestrictions>();
@@ -125,6 +146,7 @@ public class ClampMovement : MonoBehaviour
 
     IEnumerator JustExitedClamp()
     {
+        totalWacks = 0;
         justExitedClamp = true;
         yield return new WaitForSeconds(.1f);
         justExitedClamp = false;
@@ -134,26 +156,38 @@ public class ClampMovement : MonoBehaviour
     {
         float randomFloat = Random.Range(0f, 2f);
         //Debug.Log("Random float was: " + randomFloat);
-        bool isSecure = randomFloat > 1f;
-        if (isSecure)
+        if(totalWacks < 3)
+        {
+            bool isSecure = randomFloat > 1f;
+            if (isSecure)
+            {
+                fullySecure = true;
+                needsATestJiggle = false;
+                needsAWack = false;
+                currentClampStatus = ClampStatus.FullySecure;
+            }
+            else
+            {
+                fullySecure = false;
+                needsATestJiggle = false;
+                needsAWack = true;
+                currentClampStatus = ClampStatus.NeedsAWack;
+
+            }
+        }
+        else
         {
             fullySecure = true;
             needsATestJiggle = false;
             needsAWack = false;
             currentClampStatus = ClampStatus.FullySecure;
         }
-        else
-        {
-            fullySecure = false;
-            needsATestJiggle = false;
-            needsAWack = true;
-            currentClampStatus = ClampStatus.NeedsAWack;
 
-        }
     }
 
     public void DoHammerWack()
     {
+        totalWacks++;
         currentClampStatus = ClampStatus.NeedsATestJiggle;
         needsAWack = false;
         needsATestJiggle = true;

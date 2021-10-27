@@ -22,4 +22,18 @@ public class CurrentStatusBool : MonoBehaviour
         defaultStateText.enabled = !interactedState;
         interactedStateText.enabled = interactedState;
     }
+
+    public void SetTightened()
+    {
+        interactedState = true;
+        defaultStateText.enabled = false;
+        interactedStateText.enabled = true;
+    }
+
+    public void SetLoosened()
+    {
+        interactedState = false;
+        defaultStateText.enabled = true;
+        interactedStateText.enabled = false;
+    }
 }
