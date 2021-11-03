@@ -19,7 +19,7 @@ public class TableMover : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        zeroPosition = transform.position;
+        zeroPosition = transform.localPosition;
         //startXRot = xAxisHandle.transform.rotation.eulerAngles;
         //startYRot = yAxisHandle.transform.rotation.eulerAngles;
         Debug.Log("Zero position is now set to: " + zeroPosition);
@@ -34,8 +34,8 @@ public class TableMover : MonoBehaviour
 
     public void UpdatePosition()
     {
-        Vector3 newPos = new Vector3(xRotator.storedRotation * handleRotationMultiplier, 0f, yRotator.storedRotation * handleRotationMultiplier);
-        transform.position = zeroPosition + newPos;
+        Vector3 newPos = new Vector3(xRotator.storedRotation * handleRotationMultiplier, 0f, yRotator.storedRotation * -handleRotationMultiplier);
+        transform.localPosition = zeroPosition + newPos;
 
         //Vector3 newXRot = startXRot + new Vector3(1f, 0f, 0f) * handleRotationMultiplier * xAxisSlider.value;
         //xAxisHandle.transform.rotation = Quaternion.Euler(newXRot);

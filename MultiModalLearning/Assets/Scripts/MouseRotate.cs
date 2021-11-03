@@ -15,6 +15,8 @@ public class MouseRotate : MonoBehaviour, IDragHandler
     public Transform buttonTransform;
     public float modelRotationMultiplier = 1;
 
+    Transform parentTransform;
+
     //public float storedRotationMultiplier;
 
     // Start is called before the first frame update
@@ -25,12 +27,13 @@ public class MouseRotate : MonoBehaviour, IDragHandler
         storedRotation = 0f;
         startY = buttonTransform.localRotation.eulerAngles.y;
         startX = buttonTransform.localRotation.eulerAngles.x;
+        parentTransform = GetComponentInParent<Transform>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        //transform.LookAt(mainCamera.transform);
     }
 
     void IDragHandler.OnDrag(PointerEventData eventData)
@@ -40,16 +43,16 @@ public class MouseRotate : MonoBehaviour, IDragHandler
 
         //find angle between the last frame's mouse position and new mouse position
         float angle = Vector3.Angle(previousRay, newRay) * angleSensitivity;
-        //Debug.DrawRay(transform.position, previousRay, Color.green);
-        //Debug.DrawRay(transform.position, newRay, Color.green);
+        Debug.DrawRay(transform.position, previousRay, Color.green);
+        Debug.DrawRay(transform.position, newRay, Color.green);
         //Debug.Log("Change in angle is " + angle);
 
         //we will use the cross product to determine if we're going clockwise or counterclockwise
         Vector3 cross = Vector3.Cross(previousRay, newRay);
         //Debug.Log("Cross product is: " + cross);
-        //Debug.DrawRay(transform.position, cross, Color.blue);
+        Debug.DrawRay(transform.position, cross, Color.blue);
         //Debug.Log("Angle between forwards and cross is: " + Vector3.Angle(transform.forward, cross));
-        if(Vector3.Angle(transform.forward, cross) > 90)
+        if(Vector3.Angle(parentTransform.forward, cross) > 90)
         {
             storedRotation += angle;
             //Debug.Log("Rotating clockwise! Stored rotation is: " + storedRotation);

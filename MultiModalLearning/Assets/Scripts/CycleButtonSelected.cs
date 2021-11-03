@@ -23,10 +23,12 @@ public class CycleButtonSelected : MonoBehaviour
         isActivelySelected = !isActivelySelected;
         if (isActivelySelected)
         {
+
             buttonImage.color = selectedColor;
         }
         else
         {
+
             buttonImage.color = defaultColor;
         }
     }

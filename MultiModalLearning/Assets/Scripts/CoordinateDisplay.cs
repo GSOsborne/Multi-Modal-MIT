@@ -19,6 +19,8 @@ public class CoordinateDisplay : MonoBehaviour
     public bool isJogging;
     public Jogging jogging;
 
+    public CoordinateDisplay otherCoordDisplay;
+
     public bool enteringSpinSpeed;
 
     bool valueUnselected;
@@ -69,11 +71,13 @@ public class CoordinateDisplay : MonoBehaviour
         }
 
         currentCoordinates = new Vector3(xCoord, yCoord, zCoord);
+        //Debug.Log(currentCoordinates + " on " + gameObject.GetInstanceID());
     }
+
 
     public void ResetZero()
     {
-        zeroPosition = new Vector3(xRotator.storedRotation, yRotator.storedRotation, zRotator.storedRotation+millHeadRotator.storedRotation);
+        zeroPosition = new Vector3(xRotator.storedRotation, yRotator.storedRotation, zRotator.storedRotation + millHeadRotator.storedRotation);
     }
 
     public void CycleJogStatus()
@@ -276,7 +280,7 @@ public class CoordinateDisplay : MonoBehaviour
             }
             else if(whichText == zText)
             {
-                zeroPosition.z = zRotator.storedRotation - float.Parse(enteredValue);
+                zeroPosition.z = zRotator.storedRotation + millHeadRotator.storedRotation - float.Parse(enteredValue);
             }
         }
         else
@@ -285,6 +289,7 @@ public class CoordinateDisplay : MonoBehaviour
         }
         whichText.fontStyle = FontStyle.Normal;
 
+        otherCoordDisplay.zeroPosition = zeroPosition;
         enterValueRoutineStarted = false;
 
     }

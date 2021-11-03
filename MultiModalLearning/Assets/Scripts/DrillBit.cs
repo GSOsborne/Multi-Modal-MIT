@@ -7,6 +7,7 @@ using static FailureState;
 
 public class DrillBit : MonoBehaviour
 {
+    public Transform rotatingWorldZero;
     public Transform entryPoint;
     public float drillThickness;
     Drillable drill;
@@ -36,7 +37,7 @@ public class DrillBit : MonoBehaviour
                     }
                     else
                     {
-                        drill.NewHole(drillThickness, entryPoint.position);
+                        drill.NewHole(drillThickness, rotatingWorldZero.InverseTransformPoint(entryPoint.position));
                     }
 
                 }
@@ -68,7 +69,7 @@ public class DrillBit : MonoBehaviour
         {
             if (Spinning.Instance.isSpinning)
             {
-                drill.UpdateHoleDepth(entryPoint.position);
+                drill.UpdateHoleDepth(rotatingWorldZero.InverseTransformPoint(entryPoint.position));
             }
             else
             {

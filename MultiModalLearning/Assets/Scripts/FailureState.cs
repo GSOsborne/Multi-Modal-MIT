@@ -33,6 +33,7 @@ public class FailureState : MonoBehaviour
 
     public void SystemFailure(string errorMessage)
     {
+        Debug.Log("Failure: " + errorMessage);
         gameObject.SetActive(true);
         failureReasonText.text = errorMessage;
         canGroup.alpha = 1f;

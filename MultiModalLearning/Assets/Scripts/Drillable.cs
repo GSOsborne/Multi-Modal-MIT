@@ -15,6 +15,8 @@ public class Drillable : MonoBehaviour
 {
     public Transform referenceZero;
 
+    public Transform rotatingWorldZero;
+
     public GameObject holeSprite;
 
     public List<HoleInfo> drilledHoles;
@@ -44,7 +46,7 @@ public class Drillable : MonoBehaviour
     {
         Debug.Log("sent contact location was " + contactLocation);
 
-        Vector3 zeroedReferencePos = contactLocation - referenceZero.position;
+        Vector3 zeroedReferencePos = contactLocation - rotatingWorldZero.InverseTransformPoint(referenceZero.position);
         zeroedReferencePos = new Vector3(zeroedReferencePos.x, 0, zeroedReferencePos.z);
         Debug.Log("zeroed out contact location is: " + zeroedReferencePos);
 
@@ -88,7 +90,7 @@ public class Drillable : MonoBehaviour
             Debug.Log("Hole #" + holeData.holeNumber + " has a thickness of " + holeData.holeThickness + " and a start location of " + holeData.holeStartPos);
             GameObject holeSpriteObject = Instantiate(holeSprite);
             holeSpriteObject.transform.parent = transform;
-            holeSpriteObject.transform.position = referenceZero.position + holeData.holeStartPos + Vector3.up * 0.1f;
+            holeSpriteObject.transform.position = rotatingWorldZero.InverseTransformPoint(referenceZero.position) + holeData.holeStartPos + Vector3.up * 0.1f;
             holeSpriteObject.transform.localScale *= holeData.holeThickness;
             
             drilledHoles.Add(holeData);
@@ -98,7 +100,7 @@ public class Drillable : MonoBehaviour
 
     public void UpdateHoleDepth(Vector3 depthLocation)
     {
-        Vector3 zeroedDepth = depthLocation - referenceZero.position;
+        Vector3 zeroedDepth = depthLocation - rotatingWorldZero.InverseTransformPoint(referenceZero.position);
         //Debug.Log("Zeroed Depth location is " + zeroedDepth);
 
         Vector3 sentHolePosition = new Vector3(zeroedDepth.x, 0f, zeroedDepth.z);
@@ -124,8 +126,12 @@ public class Drillable : MonoBehaviour
         displayText.text = "";
         foreach (HoleInfo holeInfo in drilledHoles)
         {
-            displayText.text += "Hole #" + holeInfo.holeNumber + " at coordinates " + holeInfo.holeStartPos + " with thickness " + holeInfo.holeThickness + " with a depth of " + holeInfo.holeDepth + "\n";
-            Debug.Log("Hole #" + holeInfo.holeNumber + " at coordinates " + holeInfo.holeStartPos + " with thickness " + holeInfo.holeThickness + " with a depth of " + holeInfo.holeDepth);
+            displayText.text += "Hole #" + holeInfo.holeNumber + " at coordinates (" +
+                holeInfo.holeStartPos.x + ", " + holeInfo.holeStartPos.z + ") with thickness " + 
+                holeInfo.holeThickness + " with a depth of " + holeInfo.holeDepth + "\n";
+            Debug.Log("Hole #" + holeInfo.holeNumber + " at coordinates (" +
+                holeInfo.holeStartPos.x + ", " + holeInfo.holeStartPos.z + ") with thickness " +
+                holeInfo.holeThickness + " with a depth of " + holeInfo.holeDepth);
         }
     }
 
