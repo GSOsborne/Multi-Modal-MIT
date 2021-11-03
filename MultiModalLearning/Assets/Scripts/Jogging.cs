@@ -8,7 +8,7 @@ public class Jogging : MonoBehaviour
     public bool isPositive;
     public float jogXSpeed, jogYSpeed, jogZSpeed;
     public MouseRotate xRot, yRot, millHeadRot;
-    public Text posNegText;
+    public Text posNegText, otherPosNegText;
     public CoordinateDisplay coordDisp;
     // Start is called before the first frame update
     void Start()
@@ -24,11 +24,15 @@ public class Jogging : MonoBehaviour
             isPositive = !isPositive;
             if (isPositive)
             {
+                Debug.Log("Is Positive!");
                 posNegText.text = "+";
+                otherPosNegText.text = "+";
             }
             else
             {
+                Debug.Log("Is negative!");
                 posNegText.text = "-";
+                otherPosNegText.text = "-";
             }
         }
     }

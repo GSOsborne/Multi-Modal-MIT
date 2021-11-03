@@ -10,6 +10,9 @@ public class CinemachineRotator : MonoBehaviour
     bool isRotating;
     public int framesToZero;
 
+    public RectTransform[] rotationCanvases;
+    public Transform sceneObjects;
+
     private void Start()
     {
         isRotating = false;
@@ -17,7 +20,7 @@ public class CinemachineRotator : MonoBehaviour
 
     public void RotateLeft()
     {
-        transform.Rotate(new Vector3(0f, rotateOutSpeed * Time.deltaTime, 0f));
+        sceneObjects.Rotate(new Vector3(0f, -rotateOutSpeed * Time.deltaTime, 0f));
         float currentYRotation = transform.rotation.eulerAngles.y;
         if(currentYRotation > 180)
         {
@@ -28,11 +31,19 @@ public class CinemachineRotator : MonoBehaviour
             //Debug.Log("A little too far left.");
             transform.rotation = Quaternion.Euler(0f, 90f, 0f);
         }
+        else
+        {
+            foreach (RectTransform rect in rotationCanvases)
+            {
+                rect.Rotate(new Vector3(0f, rotateOutSpeed * Time.deltaTime, 0f));
+            }
+        }
+
     }
 
     public void RotateRight()
     {
-        transform.Rotate(new Vector3(0f, -rotateOutSpeed * Time.deltaTime, 0f));
+        sceneObjects.Rotate(new Vector3(0f, rotateOutSpeed * Time.deltaTime, 0f));
         float currentYRotation = transform.rotation.eulerAngles.y;
         if (currentYRotation > 180)
         {
@@ -42,6 +53,13 @@ public class CinemachineRotator : MonoBehaviour
         {
             //Debug.Log("A little too far right.");
             transform.rotation = Quaternion.Euler(0f, -90f, 0f);
+        }
+        else
+        {
+            foreach (RectTransform rect in rotationCanvases)
+            {
+                rect.Rotate(new Vector3(0f, -rotateOutSpeed * Time.deltaTime, 0f));
+            }
         }
     }
 

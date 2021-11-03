@@ -10,6 +10,7 @@ public class FakeCyclePosNeg : MonoBehaviour
     public Text posNegText;
     public void CyclePosNeg()
     {
+        //Debug.Log(gameObject.name + " is cycling pos neg text.");
         if (coordDisp.isJogging)
         {
             if (jogging.isPositive)
