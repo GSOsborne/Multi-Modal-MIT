@@ -12,6 +12,10 @@ public class DrillBit : MonoBehaviour
     public float drillThickness;
     Drillable drill;
 
+    public MouseRotate zRotator;
+    float storedAngleBounds;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -43,20 +47,34 @@ public class DrillBit : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("YOUR DRILL IS NOW BROKEN.");
-                    FailureState.Instance.SystemFailure("Your drill wasn't spinning when it touched the drillable piece.");
+                    Debug.Log("Locking z rotation");
+                    storedAngleBounds = zRotator.angleBounds;
+                    zRotator.angleBounds = Mathf.Abs(zRotator.storedRotation);
+                    //Debug.Log("YOUR DRILL IS NOW BROKEN.");
+                    //FailureState.Instance.SystemFailure("Your drill wasn't spinning when it touched the drillable piece.");
                 }
             }
             else
             {
-                FailureState.Instance.SystemFailure("Your block wasn't clamped when you tried to drill it.");
+                FailureState.Instance.SystemFailure("Your block wasn't clamped when you touched it with your dril.");
             }
 
         }
         else if(other.gameObject.CompareTag("Untagged"))
         {
-            Debug.Log("You should not be drilling that! Stop it now!");
-            FailureState.Instance.SystemFailure("Your drill touched something it shouldn't. Did you forget parallels?");
+            if (Spinning.Instance.isSpinning)
+            {
+                Debug.Log("You should not be drilling that! Stop it now!");
+                FailureState.Instance.SystemFailure("Your spinning drill touched something it shouldn't. Did you forget parallels?");
+            }
+            else
+            {
+                Debug.Log("Locking z rotation");
+                storedAngleBounds = zRotator.angleBounds;
+                zRotator.angleBounds = Mathf.Abs(zRotator.storedRotation);
+                FailureState.Instance.DisplayWarning("Your drill bit hit something it shouldn't have, be careful.");
+            }
+
         }
     }
 
@@ -84,8 +102,23 @@ public class DrillBit : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Drillable"))
         {
-            other.gameObject.GetComponent<Drillable>().DisplayHoleData();
+            if (Spinning.Instance.isSpinning)
+            {
+                other.gameObject.GetComponent<Drillable>().DisplayHoleData();
+            }
+            else
+            {
+                Debug.Log("Resetting angle bounds.");
+                zRotator.angleBounds = storedAngleBounds;
+            }
+
         }
+        else if (other.gameObject.CompareTag("Untagged"))
+        {
+            Debug.Log("Resetting angle bounds.");
+            zRotator.angleBounds = storedAngleBounds;
+        }
+
     }
 
     // Update is called once per frame

@@ -10,6 +10,9 @@ public class FailureState : MonoBehaviour
     public CanvasGroup canGroup;
     public TextMeshProUGUI failureReasonText;
 
+    public GameObject warningCanvas;
+    public TextMeshProUGUI warningText;
+
     private void Awake()
     {
         if(Instance == null)
@@ -27,6 +30,7 @@ public class FailureState : MonoBehaviour
         canGroup = GetComponent<CanvasGroup>();
         canGroup.alpha = 0f;
         gameObject.SetActive(false);
+        warningCanvas.SetActive(false);
     }
 
     
@@ -37,6 +41,18 @@ public class FailureState : MonoBehaviour
         gameObject.SetActive(true);
         failureReasonText.text = errorMessage;
         canGroup.alpha = 1f;
+    }
+
+    public void DisplayWarning(string warningMessage)
+    {
+        Debug.Log("Warning: " + warningMessage);
+        warningCanvas.SetActive(true);
+        warningText.text = warningMessage;
+    }
+
+    public void DismissWarning()
+    {
+        warningCanvas.SetActive(false);
     }
 
     public void RestartScene()
