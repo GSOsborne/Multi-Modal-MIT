@@ -13,9 +13,16 @@ public class CinemachineRotator : MonoBehaviour
     public RectTransform[] rotationCanvases;
     public Transform sceneObjects;
 
+    public float scrollZoomMultiplier;
+    public float maxZoomScale, minZoomScale;
+    [SerializeField] float scaleFactor;
+    bool returningToZero;
+
     private void Start()
     {
         isRotating = false;
+        scaleFactor = 1;
+        returningToZero = false;
     }
 
     public void RotateLeft()
@@ -76,14 +83,18 @@ public class CinemachineRotator : MonoBehaviour
 
     IEnumerator ReturnToZeroCoroutine()
     {
-        Quaternion startRotation = transform.rotation;
+        returningToZero = true;
+        Quaternion startRotation = sceneObjects.rotation;
+        Vector3 startScale = transform.localScale;
         for(int i = 0; i <= framesToZero; i++)
         {
             float lerp = (float)i / (float)framesToZero;
             //Debug.Log(lerp);
-            transform.rotation = Quaternion.Lerp(startRotation, Quaternion.identity, lerp);
+            sceneObjects.rotation = Quaternion.Lerp(startRotation, Quaternion.identity, lerp);
+            transform.localScale = Vector3.Lerp(startScale, new Vector3(1f, 1f, 1f), lerp);
             yield return null;
         }
+        returningToZero = false;
     }
 
     private void Update()
@@ -99,6 +110,12 @@ public class CinemachineRotator : MonoBehaviour
             transform.rotation = Quaternion.Euler(Vector3.RotateTowards(rotationVector, Vector3.zero, returnToCenterSpeed, 1));
         }
         */
+        if(Input.mouseScrollDelta.magnitude > 0.1 && !returningToZero)
+        {
+            scaleFactor -= Input.mouseScrollDelta.y * Time.deltaTime * scrollZoomMultiplier;
+            scaleFactor = Mathf.Clamp(scaleFactor, minZoomScale, maxZoomScale);
+            transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
+        }
     }
 
 
