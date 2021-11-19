@@ -72,7 +72,7 @@ public class DrillBit : MonoBehaviour
                 Debug.Log("Locking z rotation");
                 storedAngleBounds = zRotator.angleBounds;
                 zRotator.angleBounds = Mathf.Abs(zRotator.storedRotation);
-                FailureState.Instance.DisplayWarning("Your drill bit hit something it shouldn't have, be careful.");
+                FailureState.Instance.DisplayWarning("Your drill bit hit something, be careful.");
             }
 
         }

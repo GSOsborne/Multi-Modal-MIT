@@ -26,9 +26,14 @@ public class FailOnCollision : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Untagged"))
+        if (other.gameObject.CompareTag("Drillable"))
         {
-            FailureState.Instance.SystemFailure("Something touched something it shouldn't have: " + other.gameObject.name);
+            FailureState.Instance.SystemFailure("Your chuck should not be hitting the drillable piece.");
+        }
+        else if (other.gameObject.CompareTag("Untagged"))
+        {
+            //do we really care about when the chuck hits stuff by accident? This triggers when removing the chuck, which is annoying.
+            //FailureState.Instance.DisplayWarning("Careful where you're swinging that chuck!");
         }
     }
 }

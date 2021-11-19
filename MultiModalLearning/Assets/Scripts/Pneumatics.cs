@@ -12,6 +12,9 @@ public class Pneumatics : MonoBehaviour
     bool areWeSpinning;
     //public GameObject snapZoneObject;
 
+    public AudioSource pneumaticsSource;
+    public AudioClip loosenClip, tightenClip;
+
     private void Start()
     {
         isTight = interactableZoneObject.activeSelf;
@@ -33,11 +36,25 @@ public class Pneumatics : MonoBehaviour
 
     public void CycleRestrictions()
     {
+        //This method is obsolete, leftover from where there was only one button
         if (restrictions.gameObject.activeSelf)
         {
             restrictions.removable = !restrictions.removable;
             interactableZoneObject.SetActive(!interactableZoneObject.activeSelf);
             isTight = !isTight;
+            if (isTight)
+            {
+                //we just tightened
+                pneumaticsSource.clip = tightenClip;
+            }
+            else
+            {
+                //we just loosened
+                pneumaticsSource.clip = loosenClip;
+            }
+            pneumaticsSource.Play();
+
+
             if(!isTight && areWeSpinning)
             {
                 FailureState.Instance.SystemFailure("You loosened the tool while the machine was still spinning.");
@@ -49,6 +66,7 @@ public class Pneumatics : MonoBehaviour
         }
     }
 
+    //we use these methods attatched to the two buttons, now that there's actually two buttons to press in the model.
     public void Loosen()
     {
 
@@ -56,6 +74,8 @@ public class Pneumatics : MonoBehaviour
         interactableZoneObject.SetActive(false);
         isTight = false;
         Debug.Log("Loose, with an isTight value of: " + isTight);
+        pneumaticsSource.clip = loosenClip;
+        pneumaticsSource.Play();
         if (!isTight && areWeSpinning)
         {
             FailureState.Instance.SystemFailure("You loosened the tool while the machine was still spinning.");
@@ -68,6 +88,8 @@ public class Pneumatics : MonoBehaviour
         interactableZoneObject.SetActive(true);
         isTight = true;
         Debug.Log("Tight, with an isTight value of: " + isTight);
+        pneumaticsSource.clip = tightenClip;
+        pneumaticsSource.Play();
         if (!restrictions.gameObject.activeSelf)
         {
             FailureState.Instance.SystemFailure("You turned on the pneumatics without any tool to grab.");

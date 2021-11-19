@@ -15,6 +15,9 @@ public class MouseRotate : MonoBehaviour, IDragHandler
     public Transform buttonTransform;
     public float modelRotationMultiplier = 1;
 
+    public bool isXY;
+    public bool isZ;
+
     Transform parentTransform;
 
     //public float storedRotationMultiplier;
@@ -90,6 +93,15 @@ public class MouseRotate : MonoBehaviour, IDragHandler
         storedRotation += jogSpeed;
         if(storedRotation > angleBounds || storedRotation < -angleBounds)
         {
+            if (isXY)
+            {
+                Jogging.Instance.EndXYSounds();
+            }
+            else if (isZ)
+            {
+                Jogging.Instance.EndZSounds();
+            }
+
             //Debug.Log("Do we need an error message here?");
         }
         //make sure stored rotation value is clamped
