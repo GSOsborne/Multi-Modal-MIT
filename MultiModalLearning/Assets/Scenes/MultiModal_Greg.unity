@@ -10907,7 +10907,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 8104320}
         m_TargetAssemblyTypeName: Drillable, Assembly-CSharp
         m_MethodName: DisplayHoleData
         m_Mode: 1
@@ -26864,6 +26864,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.y
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7efd6a334c2379140bf6c46625ddf857, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7efd6a334c2379140bf6c46625ddf857, type: 3}
 --- !u!4 &1816405330 stripped
@@ -30894,7 +30898,7 @@ MonoBehaviour:
   OnInteractionSuccess:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 3607801105355616616}
         m_TargetAssemblyTypeName: ClampMovement, Assembly-CSharp
         m_MethodName: DoHammerWack
         m_Mode: 1
