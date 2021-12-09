@@ -20,7 +20,7 @@ public class InventoryObject : MonoBehaviour, IDragHandler, IEndDragHandler, IPo
     void Start()
     {
         image = GetComponent<Image>();
-        originalPosition = GetComponent<RectTransform>().position;
+        originalPosition = GetComponent<RectTransform>().localPosition;
         cam = Camera.main;
         SnapZoneManager.Instance.SnappedObjectReplaced += ReenableImage;
         isDragging = false;
@@ -91,7 +91,7 @@ public class InventoryObject : MonoBehaviour, IDragHandler, IEndDragHandler, IPo
 
     public void ReturnToOriginalPosition()
     {
-        transform.position = originalPosition;
+        transform.localPosition = originalPosition;
     }
 
     void ReenableImage(SnapObjectType replacedObject)
