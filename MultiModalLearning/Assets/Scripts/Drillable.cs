@@ -90,7 +90,7 @@ public class Drillable : MonoBehaviour
             Debug.Log("Hole #" + holeData.holeNumber + " has a thickness of " + holeData.holeThickness + " and a start location of " + holeData.holeStartPos);
             GameObject holeSpriteObject = Instantiate(holeSprite);
             holeSpriteObject.transform.parent = transform;
-            holeSpriteObject.transform.position = rotatingWorldZero.InverseTransformPoint(referenceZero.position) + holeData.holeStartPos + Vector3.up * 0.1f;
+            holeSpriteObject.transform.localPosition = holeSpriteObject.transform.InverseTransformPoint(referenceZero.position) + holeSpriteObject.transform.InverseTransformPoint(holeData.holeStartPos) + Vector3.up * 0.1f;
             holeSpriteObject.transform.localScale *= holeData.holeThickness;
             
             drilledHoles.Add(holeData);
