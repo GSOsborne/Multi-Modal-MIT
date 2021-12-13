@@ -15,6 +15,8 @@ public class DrillBit : MonoBehaviour
     public MouseRotate zRotator;
     float storedAngleBounds;
 
+    public bool isCenterPointDrill;
+
 
     // Start is called before the first frame update
     void Start()
@@ -41,7 +43,7 @@ public class DrillBit : MonoBehaviour
                     }
                     else
                     {
-                        drill.NewHole(drillThickness, rotatingWorldZero.InverseTransformPoint(entryPoint.position));
+                        drill.NewHole(drillThickness, rotatingWorldZero.InverseTransformPoint(entryPoint.position), isCenterPointDrill);
                     }
 
                 }

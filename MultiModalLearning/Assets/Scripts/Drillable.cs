@@ -9,6 +9,7 @@ public class HoleInfo
     public Vector3 holeStartPos;
     public float holeDepth;
     public float holeThickness;
+    public bool centerPointDrilled;
 }
 
 public class Drillable : MonoBehaviour
@@ -42,7 +43,7 @@ public class Drillable : MonoBehaviour
         drilledHoles.Clear();
     }
 
-    public void NewHole(float sentThickness, Vector3 contactLocation)
+    public void NewHole(float sentThickness, Vector3 contactLocation, bool isCenterPointDrill)
     {
         Debug.Log("sent contact location was " + contactLocation);
 
@@ -84,13 +85,24 @@ public class Drillable : MonoBehaviour
             holeCount = drilledHoles.Count;
             Debug.Log("Starting new hole #" + holeCount);
             HoleInfo holeData = new HoleInfo();
-            holeData.holeThickness = sentThickness;
+            holeData.centerPointDrilled = isCenterPointDrill;
+            if (holeData.centerPointDrilled)
+            {
+                holeData.holeThickness = sentThickness;
+            }
+            else
+            {
+                FailureState.Instance.DisplayWarning("You drilled without a pilot hole, so your hole might not be the correct diameter.");
+                holeData.holeThickness = sentThickness * 1.15f;
+            }
+
             holeData.holeStartPos = zeroedReferencePos;
             holeData.holeNumber = holeCount;
             Debug.Log("Hole #" + holeData.holeNumber + " has a thickness of " + holeData.holeThickness + " and a start location of " + holeData.holeStartPos);
             GameObject holeSpriteObject = Instantiate(holeSprite);
+            holeSpriteObject.transform.position = rotatingWorldZero.TransformPoint(contactLocation) + Vector3.up * .01f;
             holeSpriteObject.transform.parent = transform;
-            holeSpriteObject.transform.localPosition = holeSpriteObject.transform.InverseTransformPoint(referenceZero.position) + holeSpriteObject.transform.InverseTransformPoint(holeData.holeStartPos) + Vector3.up * 0.1f;
+            //holeSpriteObject.transform.localPosition = holeSpriteObject.transform.InverseTransformPoint(referenceZero.position) + holeSpriteObject.transform.InverseTransformPoint(holeData.holeStartPos) + Vector3.up * 0.1f;
             holeSpriteObject.transform.localScale *= holeData.holeThickness;
             
             drilledHoles.Add(holeData);
